@@ -3,9 +3,8 @@ import Vehicle from './Vehicle.js';
 import Motorbike from './Motorbike.js';
 import Car from './Car.js';
 import Wheel from './Wheel.js';
-import AbleToTow from '../interfaces/AbleToTow.js';
+import AbleToTow from '../interfaces/AbleToTow.js'; // TODO: is this s a problem?
 
-// TODO: The Truck class should extend the Vehicle class and should implement the AbleToTow interface
 class Truck extends Vehicle {
   vin: string;
   color: string;
@@ -52,8 +51,7 @@ class Truck extends Vehicle {
   }
   
   // Determine whether the Truck can tow a vehicle and log the results
-  //tow(vehicle: Truck | Motorbike | Car): void { // TODO Motorbike
-  tow(vehicle: Truck | Car): void {
+  tow(vehicle: Truck | Motorbike | Car): void {
     const make = vehicle.make ? vehicle.make : 'Unknown make';
     const model = vehicle.model ? vehicle.model : 'Unknown model';
     let towMessage = `The ${vehicle.make} ${vehicle.model} is `;
@@ -65,7 +63,6 @@ class Truck extends Vehicle {
     }
 
     console.log(towMessage);
-
   }
 
   // Override the printDetails method from the Vehicle class

@@ -1,4 +1,9 @@
-// TODO: Truck.ts, Cli.ts, Motorbike.ts
+// TODO: 
+//  (this)
+//  Cli.ts
+//  Motorbike.ts
+//  Truck.ts: fix towing search?
+
 // import classes
 import Truck from "./classes/Truck.js";
 import Car from "./classes/Car.js";
@@ -23,15 +28,13 @@ const car1 = new Car(
   []
 );
 
-// TODO: uncomment once motorbikes are implemented
-// const motorbike1Wheels = [new Wheel(17, "Michelin"), new Wheel(17, "Michelin")];
-// const motorbike1 = new Motorbike(Cli.generateVin(), "black", "Harley Davidson", "Sportster", 2021, 500, 125, motorbike1Wheels);
+const motorbike1Wheels = [new Wheel(17, "Michelin"), new Wheel(17, "Michelin")];
+const motorbike1 = new Motorbike(Cli.generateVin(), "black", "Harley Davidson", "Sportster", 2021, 500, 125, motorbike1Wheels);
 
 // push vehicles to array
-vehicles.push(truck1);
 vehicles.push(car1);
-// TODO: uncomment once motorbikes are implemented
-// vehicles.push(motorbike1);
+vehicles.push(truck1);
+vehicles.push(motorbike1);
 
 // create a new instance of the Cli class
 const cli = new Cli(vehicles);
