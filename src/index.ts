@@ -1,9 +1,3 @@
-// TODO: 
-//  (this)
-//  Cli.ts
-//  Motorbike.ts
-//  Truck.ts: fix towing search?
-
 // import classes
 import Truck from "./classes/Truck.js";
 import Car from "./classes/Car.js";

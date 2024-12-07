@@ -3,9 +3,10 @@ import Vehicle from './Vehicle.js';
 import Motorbike from './Motorbike.js';
 import Car from './Car.js';
 import Wheel from './Wheel.js';
-import AbleToTow from '../interfaces/AbleToTow.js'; // TODO: is this s a problem?
+import AbleToTow from '../interfaces/AbleToTow.js';
 
-class Truck extends Vehicle {
+class Truck extends Vehicle implements AbleToTow {
+//class Truck extends Vehicle {
   vin: string;
   color: string;
   make: string;

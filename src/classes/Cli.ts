@@ -258,7 +258,7 @@ class Cli {
           [
             new Wheel(parseInt(answers.frontWheelDiameter), answers.frontWheelBrand),
             new Wheel(parseInt(answers.rearWheelDiameter), answers.rearWheelBrand)
-          ]  // wheels
+          ]  // wheels - these need to be specified for Motorbike
         );
         // push the motorbike to the vehicles array
         this.vehicles.push(motorbike);
@@ -270,8 +270,8 @@ class Cli {
   }
 
   // method to find a vehicle to tow
-  // TODO: add a parameter to accept a truck object
-  findVehicleToTow(): void {
+  findVehicleToTow(truck: Truck): void {
+    // select a tow target vehicle (the vehicle being towed)
     inquirer.prompt([
         {
           type: 'list',
@@ -285,23 +285,17 @@ class Cli {
           }),
         },
       ]).then((answers) => {
-        // TODO: check if the selected vehicle is the truck
-        // TODO: if it is, log that the truck cannot tow itself then perform actions on the truck to allow the user to select another action
-        // TODO: if it is not, tow the selected vehicle then perform actions on the truck to allow the user to select another action
-        const selectedVehicle = answers.vehicleToTow;
-
-        if (selectedVehicle.vin === this.selectedVehicleVin) {
+        // console.log("DEBUG, answers.vehicleToTow);
+        // Look for the unique vin id in the list of vehicle objects matching the tow target's vin
+        const vehicleToTow = this.vehicles.find(vehicle => vehicle.vin === answers.vehicleToTow.vin);
+        // If the selected tow target vehicle's vin matches the towing truck's then log the 'can't tow itself' message
+        if (vehicleToTow && vehicleToTow.vin === truck.vin) {
           console.log("The truck cannot tow itself.");
-        } else {
-          console.log(`Towing vehicle ${selectedVehicle.vin}`);
-          const truck = this.vehicles.find(vehicle => vehicle.vin === this.selectedVehicleVin && vehicle instanceof Truck);
-          
-          if (truck instanceof Truck) {
-            truck.tow(selectedVehicle);
-          }
-          
+        } else if (vehicleToTow) {
+          // otherwise call the towing truck's unique tow method and pass info about the vehicle being towed
+          truck.tow(vehicleToTow);
         }
-
+        // invoke the main menu once again
         this.performActions();
       });
   }
@@ -388,33 +382,35 @@ class Cli {
               this.vehicles[i].reverse();
             }
           }
-        }
-        // TODO: add statements to perform the tow action only if the selected vehicle is a truck. 
-        //  Call the findVehicleToTow method to find a vehicle to tow and pass the selected truck 
-        //  as an argument. After calling the findVehicleToTow method, you will need to return to 
-        //  avoid instantly calling the performActions method again since findVehicleToTow is asynchronous.
-        else if (answers.action === 'Tow another vehicle') {
-          for (let i = 0; i < this.vehicles.length; i++) {
-            if (this.vehicles[i].vin === this.selectedVehicleVin && this.vehicles[i] instanceof Truck) {
-              this.findVehicleToTow();
-              return;
-            }
+        } else if (answers.action === 'Tow another vehicle') {  // uniqe to Truck
+          // First we need to determine if the selected vehicle is a Truck
+          //    (i.e. capable of towing)
+          // Look through the list of vehicles for the uniqe ID (vin) that
+          //    matches the currently selected vehicle
+          const selectedVehicle = this.vehicles.find(vehicle => vehicle.vin === this.selectedVehicleVin);
+          // make sure the the currently selected vehicle is a truck
+          if (selectedVehicle instanceof Truck) {
+            // if so, it can tow
+            this.findVehicleToTow(selectedVehicle);
+            return;
+          } else {
+            console.log("Only trucks can tow another vehicle.");
           }
-        }
-        else if (answers.action === 'Do a wheelie') {
+        } else if (answers.action === 'Do a wheelie') {  // unique to Motorbike
           for (let i = 0; i < this.vehicles.length; i++) {
             if (this.vehicles[i].vin === this.selectedVehicleVin) {
               if (this.vehicles[i] instanceof Motorbike) {
-                // cast the instance to a Motorbike to call Motorbike.wheelie()
+                // cast the instance type to a Motorbike in order to call 
+                //    Motorbike.wheelie()
+                // my understanding is that it's necessary because of using a 
+                //    union on the vehicle type selection
                 (this.vehicles[i] as Motorbike).wheelie();
               } else {
                 console.log("Only motorbikes can do a wheelie.");
               }
             }
           }
-        }
-
-        else if (answers.action === 'Select or create another vehicle') {
+        } else if (answers.action === 'Select or create another vehicle') {
           // start the cli to return to the initial prompt if the user wants to select or create another vehicle
           this.startCli();
           return;
